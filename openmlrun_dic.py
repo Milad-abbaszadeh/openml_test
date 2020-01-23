@@ -2,10 +2,10 @@ import openml
 import pickle
 
 
-def run_collector_specific_task(task_id):
+def run_collector_specific_task(task_id,size):
     # colect the run ids for specific task
     run_ids_flow_i = []
-    for key in openml.runs.list_runs(task=[task_id],size=1000):
+    for key in openml.runs.list_runs(task=[task_id],size=size):
         run_ids_flow_i.append(key)
     return run_ids_flow_i
 
@@ -26,6 +26,7 @@ def run_to_dic(run_id):
             if len(flow_component) <= 3:
                 last_dic['component_step'] = list(flow_component)
                 last_dic['flow_id'] = flowid
+                last_dic['evaluations'] = run_downloaded.evaluations
                 setup = openml.setups.get_setup(setup_id)
                 for component in flow_component:
                     for hyperparameter in setup.parameters.values():
@@ -35,19 +36,20 @@ def run_to_dic(run_id):
                             if str(component).lower() in str(hyperparameter.full_name).lower():
                                 last_dic['{}__{}'.format(component, hyperparameter.parameter_name)] = hyperparameter.value
 
-                # print(last_dic)
-                # print("$$$$$$$$$$$")
     except:
         print("EXCEPT")
     return last_dic
 
 
 #
-# runs = run_collector_specific_task(31)
+# runs = run_collector_specific_task(task_id=31,size=10)
 # pickle.dump(runs, open('/home/dfki/Desktop/Thesis/openml_test/1000_runs_id_task31.p','wb'))
+
+# runs=[2083190]
 # list_runs=[]
 # for i in runs:
 #     if len(run_to_dic(i))>=1:
 #         list_runs.append(run_to_dic(i))
-#
+# #
+# print(list_runs)
 # pickle.dump(list_runs, open('/home/dfki/Desktop/Thesis/openml_test/1000_list_runs_component_31.p', 'wb'))
