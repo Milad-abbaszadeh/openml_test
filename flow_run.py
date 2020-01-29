@@ -1,5 +1,5 @@
 import openml
-import run_dic
+import openmlrun_dic
 import pickle
 
 #flow ids filter base on the sklearn type and had 3component and mazimum 3 steps
@@ -30,17 +30,17 @@ def creat_searchspace(consider_runs):
     run_dic_list = []
     for i in consider_runs:
         try:
-            run_dic_list.append(run_dic.run_to_dic(i))
+            run_dic_list.append(openmlrun_dic.run_to_dic(i))
 
-            if len(run_dic.run_to_dic(i))>=1:
-                for key in run_dic.run_to_dic(i):
+            if len(openmlrun_dic.run_to_dic(i))>=1:
+                for key in openmlrun_dic.run_to_dic(i):
                     if key not in search_space:
-                        search_space[key] = [run_dic.run_to_dic(i)[key]]
+                        search_space[key] = [openmlrun_dic.run_to_dic(i)[key]]
                     else:
-                        if run_dic.run_to_dic(i)[key] in search_space[key]:
+                        if openmlrun_dic.run_to_dic(i)[key] in search_space[key]:
                             pass
                         else:
-                            search_space[key] = search_space[key]+[run_dic.run_to_dic(i)[key]]
+                            search_space[key] = search_space[key]+[openmlrun_dic.run_to_dic(i)[key]]
         except:
                 print('except')
     print(search_space)

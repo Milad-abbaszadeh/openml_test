@@ -1,0 +1,32 @@
+{'A': {'A1': 8}, 'B': {'B2': 0.47788520456867667}}
+a is [8],b is [0.47788520456867667] and loss is 8.477885204568677
+--------------------
+{'A': {'A1': 6}, 'B': {'B2': 0.4841871195829277}}
+a is [6],b is [0.4841871195829277] and loss is 6.484187119582928
+--------------------
+{'A': {'A2': 0.4154072211477518}, 'B': {'B2': 0.07486507697436368}}
+a is [0.4154072211477518],b is [0.07486507697436368] and loss is 0.4902722981221155
+--------------------
+{'A': {'A1': 8}, 'B': {'B1': 9}}
+a is [8],b is [9] and loss is 17
+--------------------
+{'A': {'A2': 0.046425274004063766}, 'B': {'B1': 2}}
+a is [0.046425274004063766],b is [2] and loss is 2.0464252740040636
+--------------------
+100%|██████████| 5/5 [00:00<00:00, 241.23trial/s, best loss: 0.4902722981221155]
+{'A': 1, 'A2': 0.4154072211477518, 'B': 1, 'B2': 0.07486507697436368}
+
+[{'state': 2, 'tid': 0, 'spec': None, 'result': {'loss': 8.477885204568677, 'status': 'ok'}, 'misc': {'tid': 0, 'cmd': ('domain_attachment', 'FMinIter_Domain'), 'workdir': None, 'idxs': {'A': [0], 'A1': [0], 'A2': [], 'B': [0], 'B1': [], 'B2': [0]}, 'vals': {'A': [0], 'A1': [7], 'A2': [], 'B': [1], 'B1': [], 'B2': [0.47788520456867667]}}, 'exp_key': None, 'owner': None, 'version': 0, 'book_time': datetime.datetime(2020, 1, 24, 9, 48, 20, 386000), 'refresh_time': datetime.datetime(2020, 1, 24, 9, 48, 20, 387000)},
+
+
+
+ {'state': 2, 'tid': 1, 'spec': None, 'result': {'loss': 6.484187119582928, 'status': 'ok'}, 'misc': {'tid': 1, 'cmd': ('domain_attachment', 'FMinIter_Domain'), 'workdir': None, 'idxs': {'A': [1], 'A1': [1], 'A2': [], 'B': [1], 'B1': [], 'B2': [1]}, 'vals': {'A': [0], 'A1': [5], 'A2': [], 'B': [1], 'B1': [], 'B2': [0.4841871195829277]}}, 'exp_key': None, 'owner': None, 'version': 0, 'book_time': datetime.datetime(2020, 1, 24, 9, 48, 20, 390000), 'refresh_time': datetime.datetime(2020, 1, 24, 9, 48, 20, 391000)}, {'state': 2, 'tid': 2, 'spec': None, 'result': {'loss': 0.4902722981221155, 'status': 'ok'}, 'misc': {'tid': 2, 'cmd': ('domain_attachment', 'FMinIter_Domain'), 'workdir': None, 'idxs': {'A': [2], 'A1': [], 'A2': [2], 'B': [2], 'B1': [], 'B2': [2]}, 'vals': {'A': [1], 'A1': [], 'A2': [0.4154072211477518], 'B': [1], 'B1': [], 'B2': [0.07486507697436368]}}, 'exp_key': None, 'owner': None, 'version': 0, 'book_time': datetime.datetime(2020, 1, 24, 9, 48, 20, 395000), 'refresh_time': datetime.datetime(2020, 1, 24, 9, 48, 20, 396000)}, {'state': 2, 'tid': 3, 'spec': None, 'result': {'loss': 17.0, 'status': 'ok'}, 'misc': {'tid': 3, 'cmd': ('domain_attachment', 'FMinIter_Domain'), 'workdir': None, 'idxs': {'A': [3], 'A1': [3], 'A2': [], 'B': [3], 'B1': [3], 'B2': []}, 'vals': {'A': [0], 'A1': [7], 'A2': [], 'B': [0], 'B1': [8], 'B2': []}}, 'exp_key': None, 'owner': None, 'version': 0, 'book_time': datetime.datetime(2020, 1, 24, 9, 48, 20, 399000), 'refresh_time': datetime.datetime(2020, 1, 24, 9, 48, 20, 400000)}, {'state': 2, 'tid': 4, 'spec': None, 'result': {'loss': 2.0464252740040636, 'status': 'ok'}, 'misc': {'tid': 4, 'cmd': ('domain_attachment', 'FMinIter_Domain'), 'workdir': None, 'idxs': {'A': [4], 'A1': [], 'A2': [4], 'B': [4], 'B1': [4], 'B2': []}, 'vals': {'A': [1], 'A1': [], 'A2': [0.046425274004063766], 'B': [0], 'B1': [1], 'B2': []}}, 'exp_key': None, 'owner': None, 'version': 0, 'book_time': datetime.datetime(2020, 1, 24, 9, 48, 20, 403000), 'refresh_time': datetime.datetime(2020, 1, 24, 9, 48, 20, 403000)}]
+
+Process finished with exit code 0
+
+
+
+space = {
+    'A':hp.choice('A',[{'A1':hp.choice('A1',range(1,10))},{'A2':hp.uniform('A2',0,0.5)}]),
+    'B':hp.choice('B',[{'B1':hp.choice('B1',range(1,10))},{'B2':hp.uniform('B2',0,0.5)}])
+}

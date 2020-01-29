@@ -64,9 +64,9 @@ class Run_hyperopt(object):
                     'pca__tol': hp.uniform('pca__tol',0,0.5),
                     'pca__whiten': hp.choice('pca__whiten', [True, False])},
 
-                    {'type':'kernel_pca',
-                     # 'kernel':hp.choice('kernel',["linear","poly","rbf","sigmoid","cosine"]),
-                     'kernel_pca__n_components':hp.choice('kernel_pca__n_components',range(10,self.X.shape[1]))
+                    {'type':'kernelpca',
+                     'kernelpca__kernel':hp.choice('kernelpca__kernel',["linear","poly","rbf","sigmoid","cosine"]),
+                     'kernelpca__n_components':hp.choice('kernelpca__n_components',range(10,self.X.shape[1]))
                      },
 
                     {   'type':'VarianceThreshold',
@@ -230,7 +230,7 @@ def point_builder(what_we_have,space):
                                 pass
                             else:
                                 # key_colector.append(kk)
-                                what_we_need[kk]=None
+                                what_we_need[kk]='This_is_None'
 
     # dict1 = dict.fromkeys(key_colector)
     # dict3 = {**dict1, **what_we_need}
