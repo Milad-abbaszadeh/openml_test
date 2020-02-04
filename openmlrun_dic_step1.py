@@ -2,10 +2,10 @@ import openml
 import pickle
 
 
-def run_collector_specific_task(task_id,size):
+def run_collector_specific_task(task_id,flow,size):
     # colect the run ids for specific task
     run_ids_flow_i = []
-    for key in openml.runs.list_runs(task=[task_id],size=size):
+    for key in openml.runs.list_runs(task=[task_id],size=size,flow=flow):
         run_ids_flow_i.append(key)
     return run_ids_flow_i
 
@@ -20,8 +20,9 @@ def run_to_dic(run_id):
         # print(flow.class_name)
 
         if flow.class_name =='sklearn.pipeline.Pipeline':
-            # print("Number of component is {}".format(len(flow_component)))
-            # print(flow_component)
+            print("Number of component is {}".format(len(flow_component)))
+            print(flow_component)
+            print("_____")
 
             if len(flow_component) <= 3:
                 last_dic['component_step'] = list(flow_component)
@@ -36,18 +37,27 @@ def run_to_dic(run_id):
                             if str(component).lower() in str(hyperparameter.full_name).lower():
 
                                 val = hyperparameter.value
-                                if val in ['None']:
-                                    val =None
+                                assert str(type(val)) in  ["<class 'str'>","<class 'int'>","<class 'float'>","<class 'bool'>","<class 'NoneType'>"]
+                                if val in ['None','null']:
+                                    val = None
 
-                                elif val in ['True','False']:
-                                    val =bool(val)
+                                elif val in ['True','False','true','false']:
+                                    if val in ['True','true']:
+                                        val = True
+                                    else:
+                                        val =False
                                 else:
                                     try:
                                         val = float(val)
                                         if val.is_integer():
                                             val = int(val)
                                     except:
-                                        val =str(val)
+
+                                        if type(eval(val)) ==str:
+                                            val= eval(val)
+                                        else:
+                                            pass
+                                        # val =str(val)
 
                                 last_dic['{}__{}'.format(component, hyperparameter.parameter_name)] = val
                                 # last_dic['{}'.format(hyperparameter.parameter_name)] = val
@@ -56,18 +66,17 @@ def run_to_dic(run_id):
         print("EXCEPT")
     return last_dic
 
+flow =[8817, 6969, 8815, 8890, 16345, 8317, 6970, 8315, 9666, 7707, 8351, 8353, 6952, 6840, 15083, 8774, 8786, 8918, 12736, 8844, 8834, 16360, 8330, 16347, 7096, 8795, 16374, 8797, 8887, 8365, 8399, 8885, 8793, 8788, 7116, 16366, 7725, 17373, 8568, 7253, 7254, 8796, 17371, 13293, 7754, 7756, 7722, 6954, 7777, 8876, 7684, 7729, 8879, 7694, 8826, 8880, 7089, 6946, 7819, 16357, 17420, 7681, 8908, 7097, 8608, 8789]
 
-#
-# runs = run_collector_specific_task(task_id=31,size=1000)
-# pickle.dump(runs, open('/home/dfki/Desktop/Thesis/openml_test/1000_runs_id_task31.p','wb'))
 
-# runs=[2083190]
-runs = [1985170, 1860342, 1860483, 1874310, 1874311, 1874312, 1874313, 1874314, 1874315, 1874316, 1874317, 1870047, 1873594, 2039491, 2036013, 2036024, 2036026, 2036029, 2036034, 2036037, 2034185, 2044888, 2016496, 2016942, 2013575, 2013577, 2015997, 2016002, 2041940, 2042009, 2081539, 2081565, 2083023, 2083110, 2083146, 2083157, 2083169, 2083171, 2083172, 2083173, 2083174, 2083175, 2083176, 2083187, 2083188, 2083189, 2083190, 2083543, 2083596]
+runs = run_collector_specific_task(task_id=10101,flow=flow,size=None)
+print(len(runs))
+pickle.dump(runs, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/10101/all_sklearn_runs_id_task10101.p','wb'))
 
 list_runs=[]
 for i in runs:
     if len(run_to_dic(i))>=1:
         list_runs.append(run_to_dic(i))
-#
-print(list_runs)
-pickle.dump(list_runs, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/1000_list_runs_component_31.p','wb'))
+
+print(len(list_runs))
+pickle.dump(list_runs, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/10101/list_runs_component_10101_all_flow.p','wb'))
