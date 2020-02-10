@@ -69,9 +69,9 @@ def run_to_dic(run_id):
 flow =[8817, 6969, 8815, 8890, 16345, 8317, 6970, 8315, 9666, 7707, 8351, 8353, 6952, 6840, 15083, 8774, 8786, 8918, 12736, 8844, 8834, 16360, 8330, 16347, 7096, 8795, 16374, 8797, 8887, 8365, 8399, 8885, 8793, 8788, 7116, 16366, 7725, 17373, 8568, 7253, 7254, 8796, 17371, 13293, 7754, 7756, 7722, 6954, 7777, 8876, 7684, 7729, 8879, 7694, 8826, 8880, 7089, 6946, 7819, 16357, 17420, 7681, 8908, 7097, 8608, 8789]
 
 
-runs = run_collector_specific_task(task_id=10101,flow=flow,size=None)
+runs = run_collector_specific_task(task_id=125923,flow=flow,size=None)
 print(len(runs))
-pickle.dump(runs, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/10101/all_sklearn_runs_id_task10101.p','wb'))
+pickle.dump(runs, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/125923/all_sklearn_runs_id_task125923.p','wb'))
 
 list_runs=[]
 for i in runs:
@@ -79,4 +79,4 @@ for i in runs:
         list_runs.append(run_to_dic(i))
 
 print(len(list_runs))
-pickle.dump(list_runs, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/10101/list_runs_component_10101_all_flow.p','wb'))
+pickle.dump(list_runs, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/125923/list_runs_component_125923_all_flow.p','wb'))

@@ -243,7 +243,7 @@ def point_builder(what_we_have,space):
 
 
 import pickle
-points_list_runs_component_32 = pickle.load(open("/home/dfki/Desktop/Thesis/openml_test/pickel_files/10101/list_runs_component_10101_all_flow.p", "rb"))
+points_list_runs_component_32 = pickle.load(open("/home/dfki/Desktop/Thesis/openml_test/pickel_files/3/list_runs_component_3_all_flow.p", "rb"))
 print(len(points_list_runs_component_32))
 runner = Run_hyperopt(31,31)
 search_space = runner.make_search_space()
@@ -257,7 +257,7 @@ for point in points_list_runs_component_32:
             points_ready_turn_totrials.append(new_point)
     except:
         print("Except")
-pickle.dump(points_ready_turn_totrials, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/10101/points_ready_turn_totrials_10101.p','wb'))
+pickle.dump(points_ready_turn_totrials, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/3/points_ready_turn_totrials_3.p','wb'))
 
 print(len(points_ready_turn_totrials))
 
