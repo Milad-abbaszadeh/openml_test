@@ -91,7 +91,8 @@ class Run_hyperopt(object):
 
                 {'type': 'decisiontreeclassifier',
                  'decisiontreeclassifier__criterion': hp.choice('decisiontreeclassifier__criterion', ["gini", "entropy"]),
-                 'decisiontreeclassifier__max_depth': hp.choice('decisiontreeclassifier__max_depth', [None] +list(range(1,9))),
+                 # 'decisiontreeclassifier__max_depth': hp.choice('decisiontreeclassifier__max_depth', [None] +list(range(1,9))),
+                 'decisiontreeclassifier__max_depth': hp.uniform('decisiontreeclassifier__max_depth', 0.1,0.99),
                  'decisiontreeclassifier__min_samples_leaf': hp.choice('decisiontreeclassifier__min_samples_leaf', range(1, 21)),
                  'decisiontreeclassifier__min_samples_split': hp.choice('decisiontreeclassifier__min_samples_split', range(1, 21)),
                  },
@@ -132,7 +133,7 @@ class Run_hyperopt(object):
                  },
 
                 {'type': 'svc',
-                 'svc__C': hp.uniform("svc__C", 0.01, 9979.44679282882),
+                 'svc__C': hp.uniform("svc__C", 0.01,9979.44679282882),
                  'svc__coef0': hp.uniform('svc__coef0', -0.0001901088806708362, 0.9996939328918386),
                  'svc__degree': hp.choice('svc__degree', range(1, 6)),
                  'svc__gamma': hp.uniform('svc__gamma', 9.984514749387293e-05, 0.00010001864000043732),
@@ -197,21 +198,36 @@ def point_builder(what_we_have,space):
     for step in component_step:
         for k,v in space.items():
             for option in v:
-                if str(step).lower() == str(option['type']).lower():
+                if str(step).lower() in str(option['type']).lower(): #==
                     what_we_need[k] =  v.index(option)
                     for option_key,option_val in option.items():
-                        if option_key in what_we_have.keys():
+                        if str(option_key).lower() in [str(i).lower() for i in what_we_have.keys()]:
                             if (type(option_val) ==range)or (type(option_val) ==list):
                                 try:
-                                    what_we_need[option_key] = option_val.index(what_we_have[option_key])
+                                    what_we_need[option_key] = option_val.index(what_we_have[option_key.lower()])
                                 except:
                                     print(" --- excption {} not valid for {} because permited option value is {}".format(what_we_have[option_key],option_key,option_val))
                                     return {}
-                                    pass
+
 
                             else:
                                 try:
-                                    what_we_need[option_key] = what_we_have[option_key]
+                                    if (type(what_we_have[option_key.lower()]) != int) or (type(what_we_have[option_key.lower()]) != float):
+                                        try:
+                                            what_we_need[option_key] = float(what_we_have[option_key.lower()])
+                                        except:
+                                            what_we_need[option_key] = 'This_is_None'
+                                    else:
+                                        what_we_need[option_key] = what_we_have[option_key.lower()]
+
+                                    # if option_key =='randomforestclassifier__max_features':
+                                    #     what_we_need[option_key] ='This_is_None'
+                                    #
+                                    # else:
+                                    #     if type(what_we_have[option_key.lower()]) ==str:
+                                    #         what_we_need[option_key] = float(what_we_have[option_key.lower()])
+                                    #     else:
+                                    #         what_we_need[option_key] = what_we_have[option_key.lower()]
                                 except:
                                     print(" --- excption {} not valid for {} because permited option value is {}".format(what_we_have[option_key],option_key,option_val))
                                     return {}
@@ -220,7 +236,9 @@ def point_builder(what_we_have,space):
     for space_key,space_val in space.items():
         if space_key not in what_we_need:
                 if space_key =='classifier':
-                    pass
+                    #classifier is not in our list
+                    return {}
+
                 else:
                     what_we_need[space_key] = space[space_key].index({'type':"do_noting"})
 
@@ -243,7 +261,7 @@ def point_builder(what_we_have,space):
 
 
 import pickle
-points_list_runs_component_32 = pickle.load(open("/home/dfki/Desktop/Thesis/openml_test/pickel_files/3/list_runs_component_3_all_flow.p", "rb"))
+points_list_runs_component_32 = pickle.load(open("/home/dfki/Desktop/Thesis/openml_test/pickel_files/3/list_runs_component_3_all_flow_new.p", "rb"))
 print(len(points_list_runs_component_32))
 runner = Run_hyperopt(3,3)
 search_space = runner.make_search_space()
@@ -255,9 +273,11 @@ for point in points_list_runs_component_32:
             pass
         else:
             points_ready_turn_totrials.append(new_point)
-    except:
-        print("Except")
-# pickle.dump(points_ready_turn_totrials, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/3/points_ready_turn_totrials_3.p','wb'))
+    except Exception as e:
+        print(e)
+        print("-------------Except---------------")
+
+pickle.dump(points_ready_turn_totrials, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/3/points_ready_turn_totrials_3_new.p','wb'))
 
 print(len(points_ready_turn_totrials))
 
