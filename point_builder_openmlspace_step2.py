@@ -192,24 +192,48 @@ class Run_hyperopt(object):
 
 def point_builder(what_we_have,space):
 
+    #make the dataframe out of openml data
+    row_df ={}
+    row_df['run_id'] = what_we_have['run_id']
+    row_df['flow_id'] = what_we_have['flow_id']
+    row_df['accuracy'] =  what_we_have['evaluations']['predictive_accuracy']
+
+    row_df["f_measure"] = what_we_have['evaluations']["f_measure"]
+    row_df["area_under_roc_curve"] = what_we_have['evaluations']["area_under_roc_curve"]
+    row_df["average_cost"]= what_we_have['evaluations']["average_cost"]
+    row_df["kappa"]= what_we_have['evaluations']["kappa"]
+    row_df["kb_relative_information_score"]=what_we_have['evaluations']["kb_relative_information_score"]
+    row_df["mean_absolute_error"]= what_we_have['evaluations']["mean_absolute_error"]
+    row_df["mean_prior_absolute_error"]=what_we_have['evaluations']["mean_prior_absolute_error"]
+    row_df["prior_entropy"]=what_we_have['evaluations']["prior_entropy"]
+    # row_df["recall"]=what_we_have['evaluations']["recall"]
+    row_df["relative_absolute_error"]= what_we_have['evaluations']["relative_absolute_error"]
+    row_df["root_mean_prior_squared_error"]= what_we_have['evaluations']["root_mean_prior_squared_error"]
+    row_df["root_mean_squared_error"]= what_we_have['evaluations']["root_mean_squared_error"]
+    row_df["root_relative_squared_error"]= what_we_have['evaluations']["root_relative_squared_error"]
+
+
     component_step =what_we_have['component_step']
     what_we_need={}
+
     what_we_need['accuracy'] = what_we_have['evaluations']['predictive_accuracy']
+    what_we_need['run_id'] = what_we_have['run_id']
+    what_we_need['f_measure'] = what_we_have['evaluations']['f_measure']
     for step in component_step:
         for k,v in space.items():
             for option in v:
                 if str(step).lower() in str(option['type']).lower(): #==
                     what_we_need[k] =  v.index(option)
+                    row_df[k] = option['type']
                     for option_key,option_val in option.items():
                         if str(option_key).lower() in [str(i).lower() for i in what_we_have.keys()]:
+                            row_df[option_key] = what_we_have[option_key.lower()]
                             if (type(option_val) ==range)or (type(option_val) ==list):
                                 try:
                                     what_we_need[option_key] = option_val.index(what_we_have[option_key.lower()])
                                 except:
                                     print(" --- excption {} not valid for {} because permited option value is {}".format(what_we_have[option_key],option_key,option_val))
-                                    return {}
-
-
+                                    return {},{}
                             else:
                                 try:
                                     if (type(what_we_have[option_key.lower()]) != int) or (type(what_we_have[option_key.lower()]) != float):
@@ -219,31 +243,23 @@ def point_builder(what_we_have,space):
                                             what_we_need[option_key] = 'This_is_None'
                                     else:
                                         what_we_need[option_key] = what_we_have[option_key.lower()]
-
-                                    # if option_key =='randomforestclassifier__max_features':
-                                    #     what_we_need[option_key] ='This_is_None'
-                                    #
-                                    # else:
-                                    #     if type(what_we_have[option_key.lower()]) ==str:
-                                    #         what_we_need[option_key] = float(what_we_have[option_key.lower()])
-                                    #     else:
-                                    #         what_we_need[option_key] = what_we_have[option_key.lower()]
                                 except:
                                     print(" --- excption {} not valid for {} because permited option value is {}".format(what_we_have[option_key],option_key,option_val))
-                                    return {}
+                                    return {},{}
                                     pass
     #if the step is not in the recived config
     for space_key,space_val in space.items():
         if space_key not in what_we_need:
                 if space_key =='classifier':
                     #classifier is not in our list
-                    return {}
+                    return {},{}
 
                 else:
                     what_we_need[space_key] = space[space_key].index({'type':"do_noting"})
+                    row_df[space_key] = 'do_noting'
 
         if len(what_we_need) < 5:
-            return {}
+            return {},{}
 
         #put empty
         for item in space_val:
@@ -255,29 +271,47 @@ def point_builder(what_we_have,space):
                                 pass
                             else:
                                 what_we_need[kk]='This_is_None'
+                                row_df[kk] = 'This_is_None'
 
 
-    return what_we_need
+    return what_we_need,row_df
 
 
 import pickle
-points_list_runs_component_32 = pickle.load(open("/home/dfki/Desktop/Thesis/openml_test/pickel_files/3/list_runs_component_3_all_flow_new.p", "rb"))
+points_list_runs_component_32 = pickle.load(open("/home/dfki/Desktop/Thesis/openml_test/pickel_files/31/list_runs_component_31_all_flow_withrunid.p", "rb"))
 print(len(points_list_runs_component_32))
-runner = Run_hyperopt(3,3)
+runner = Run_hyperopt(31,31)
 search_space = runner.make_search_space()
 points_ready_turn_totrials=[]
+rows_of_df =[]
 for point in points_list_runs_component_32:
     try:
-        new_point = point_builder(point,search_space)
+        new_point,row_df = point_builder(point,search_space)
         if len(new_point)< 5:
             pass
         else:
             points_ready_turn_totrials.append(new_point)
+            rows_of_df.append(row_df)
+
     except Exception as e:
         print(e)
         print("-------------Except---------------")
 
-pickle.dump(points_ready_turn_totrials, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/3/points_ready_turn_totrials_3_new.p','wb'))
+#prepare the dataframe
+import pandas as pd
+d = {}
+for col in rows_of_df[0].keys():
+    d[col]=[]
+for row in rows_of_df:
+    for keyy in row.keys():
+        d[keyy].append(row[keyy])
+
+
+df = pd.DataFrame.from_dict(d)
+print(df.shape)
+
+pickle.dump(df, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/31/df_31.p','wb'))
+pickle.dump(points_ready_turn_totrials, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/31/points_ready_turn_totrials_31_withrunid.p','wb'))
 
 print(len(points_ready_turn_totrials))
 

@@ -7,6 +7,8 @@ from hyperopt import base
 def generate_trial_2(tid, space):
 
     acc= -space['accuracy']
+    run_id = space['run_id']
+    f1 = space['f_measure']
     del space['accuracy']
     idxs={}
     vals={}
@@ -24,7 +26,7 @@ def generate_trial_2(tid, space):
         "state": base.JOB_STATE_DONE,
         "tid": tid,
         "spec": None,
-        "result": {'loss': acc, 'status': 'ok'},
+        "result": {'loss': acc, 'status': 'ok','run_id':run_id,'f_measure':f1 },
         "misc": {
             "tid": tid,
             "cmd": ("domain_attachment", "FMinIter_Domain"),
@@ -52,8 +54,8 @@ def trial_builder(points):
 
 
 import pickle
-points_ready_turn_totrials = pickle.load(open("/home/dfki/Desktop/Thesis/openml_test/pickel_files/3/points_ready_turn_totrials_3_new.p", "rb"))
+points_ready_turn_totrials = pickle.load(open("/home/dfki/Desktop/Thesis/openml_test/pickel_files/31/points_ready_turn_totrials_31_withrunid.p", "rb"))
 
 trial = trial_builder(points_ready_turn_totrials)
 print(len(trial.trials))
-pickle.dump(trial, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/3/trial_3_new.p','wb'))
+pickle.dump(trial, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/31/trial_31_withrunid1.p','wb'))
