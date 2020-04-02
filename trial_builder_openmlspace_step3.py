@@ -54,8 +54,8 @@ def trial_builder(points):
 
 
 import pickle
-points_ready_turn_totrials = pickle.load(open("/home/dfki/Desktop/Thesis/openml_test/pickel_files/31/points_ready_turn_totrials_31_withrunid.p", "rb"))
+points_ready_turn_totrials = pickle.load(open("/home/dfki/Desktop/Thesis/openml_test/pickel_files/125923/final/points_ready_turn_totrials_125923_withrunid.p", "rb"))
 
 trial = trial_builder(points_ready_turn_totrials)
 print(len(trial.trials))
-pickle.dump(trial, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/31/trial_31_withrunid1.p','wb'))
+pickle.dump(trial, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/125923/final/trial_125923_withrunid1.p','wb'))

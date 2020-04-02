@@ -278,13 +278,13 @@ def point_builder(what_we_have,space):
 
 
 import pickle
-points_list_runs_component_32 = pickle.load(open("/home/dfki/Desktop/Thesis/openml_test/pickel_files/31/list_runs_component_31_all_flow_withrunid.p", "rb"))
-print(len(points_list_runs_component_32))
+points_list_runs_component = pickle.load(open("/home/dfki/Desktop/Thesis/openml_test/pickel_files/31/final/list_runs_component_31_all_flow_withrunid.p", "rb"))
+print(len(points_list_runs_component))
 runner = Run_hyperopt(31,31)
 search_space = runner.make_search_space()
 points_ready_turn_totrials=[]
 rows_of_df =[]
-for point in points_list_runs_component_32:
+for point in points_list_runs_component:
     try:
         new_point,row_df = point_builder(point,search_space)
         if len(new_point)< 5:
@@ -310,8 +310,8 @@ for row in rows_of_df:
 df = pd.DataFrame.from_dict(d)
 print(df.shape)
 
-pickle.dump(df, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/31/df_31.p','wb'))
-pickle.dump(points_ready_turn_totrials, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/31/points_ready_turn_totrials_31_withrunid.p','wb'))
+pickle.dump(df, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/31/final/df_31.p','wb'))
+pickle.dump(points_ready_turn_totrials, open('/home/dfki/Desktop/Thesis/openml_test/pickel_files/31/final/points_ready_turn_totrials_31_withrunid.p','wb'))
 
 print(len(points_ready_turn_totrials))
 
